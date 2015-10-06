@@ -9,6 +9,7 @@ Dependencies
 
 1. Vagrant 1.4 or higher (http://www.vagrantup.com/)
 2. VirtualBox 4.3.4 or higher (https://www.virtualbox.org/)
+3. Chef Development Kit (includes Berkshelf)
 
 
 First time setup - Linux / Mac

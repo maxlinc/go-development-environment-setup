@@ -4,6 +4,8 @@ set -e
 export MEMORY=4096
 export TO_RUN_WITH_WINDOW_MANAGER=true
 
+vagrant plugin install vagrant-berkshelf
+
 vagrant halt
 HEADLESS=true vagrant up --provision
 vagrant halt

@@ -24,6 +24,7 @@ class Environment
     return {} unless File.exists? EnvironmentSettingsFile
 
     JSON.parse File.read EnvironmentSettingsFile
+
   end
 end
 
@@ -37,6 +38,8 @@ puts "Will use #{memory_to_use}MB of RAM for the virtual machine."
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "precise64"
   config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+
+  config.berkshelf.enabled = true
 
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.auto_detect = true
@@ -59,8 +62,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "shell", inline: "apt-get update"
 
   config.vm.provision :chef_solo do |chef|
-    chef.recipe_url = "https://raw.github.com/GoCD/go-dev-setup-cookbooks/master/cookbooks.tar.gz"
-    chef.cookbooks_path = [:vm, "go-dev-setup-cookbooks"]
+    # chef.recipe_url = "https://raw.github.com/maxlinc/go-dev-setup-cookbooks/update_curl_cookbook/cookbooks.tar.gz"
+    # chef.cookbooks_path = [:vm, "go-dev-setup-cookbooks"]
     chef.verbose_logging = true
 
     chef.add_recipe "zip"
@@ -76,13 +79,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     chef.add_recipe "rake"
     chef.add_recipe "curl"
 
-    chef.add_recipe "intellij" if env.read("TO_RUN_WITH_WINDOW_MANAGER") == "true"
-    chef.add_recipe "gnome" if env.read("TO_RUN_WITH_WINDOW_MANAGER") == "true"
-    chef.add_recipe "startup-setup" if env.read("TO_RUN_WITH_WINDOW_MANAGER") == "true"
+    # chef.add_recipe "intellij" if env.read("TO_RUN_WITH_WINDOW_MANAGER") == "true"
+    # chef.add_recipe "gnome" if env.read("TO_RUN_WITH_WINDOW_MANAGER") == "true"
+    # chef.add_recipe "startup-setup" if env.read("TO_RUN_WITH_WINDOW_MANAGER") == "true"
 
-    chef.add_recipe "startup-setup-console"
-    chef.add_recipe "remove-unused-packages"
-    chef.add_recipe "go-setup"
+    chef.add_recipe "go-development-environment::startup-setup-console"
+    chef.add_recipe "go-development-environment::remove-unused-packages"
+    # chef.add_recipe "go-development-environment::go-setup"
 
     chef.json = {
       'java' => {
